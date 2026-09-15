@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3478f6">
+    <meta name="description" content="TaskFlow - Aplicação de Tarefas com Local Storage">
+    <title>TaskFlow | To-Do List</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="todo-style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="todo-header">
+    <div class="todo-container">
+        <div class="logo-section">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+            <h1>TaskFlow</h1>
+        </div>
+        <div class="header-stats">
+            <div class="stat">
+                <span class="stat-label">Tarefas</span>
+                <span class="stat-value" id="totalTasks">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Completas</span>
+                <span class="stat-value" id="completedTasks">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Pendentes</span>
+                <span class="stat-value" id="pendingTasks">0</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="todo-main">
+    <div class="todo-container">
+
+        <!-- =====================================================
+             INPUT SECTION
+        ===================================================== -->
+
+        <section class="input-section">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="taskInput" 
+                    class="task-input" 
+                    placeholder="Adicione uma nova tarefa..."
+                    autocomplete="off"
+                >
+                <select id="prioritySelect" class="priority-select">
+                    <option value="baixa">Baixa Prioridade</option>
+                    <option value="media" selected>Média Prioridade</option>
+                    <option value="alta">Alta Prioridade</option>
+                </select>
+                <button id="addTaskBtn" class="add-button">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    Adicionar
+                </button>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             FILTERS
+        ===================================================== -->
+
+        <section class="filters-section">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="todos">
+                    Todas (0)
+                </button>
+                <button class="filter-btn" data-filter="pendentes">
+                    Pendentes (0)
+                </button>
+                <button class="filter-btn" data-filter="completas">
+                    Completas (0)
+                </button>
+            </div>
+            <div class="sort-group">
+                <select id="sortSelect" class="sort-select">
+                    <option value="data">Ordenar por Data</option>
+                    <option value="prioridade">Ordenar por Prioridade</option>
+                    <option value="nome">Ordenar por Nome</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             TASKS LIST
+        ===================================================== -->
+
+        <section class="tasks-section">
+            <div id="tasksList" class="tasks-list">
+                <!-- Tarefas adicionadas aqui -->
+            </div>
+
+            <div id="emptyState" class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h2>Nenhuma tarefa aqui!</h2>
+                <p>Adicione uma tarefa para começar.</p>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             ACTIONS
+        ===================================================== -->
+
+        <section class="actions-section">
+            <button id="clearCompletedBtn" class="action-btn danger" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-9l-1 1H5v2h14V4z"/>
+                </svg>
+                Limpar Completas
+            </button>
+            <button id="exportBtn" class="action-btn primary">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/>
+                </svg>
+                Exportar
+            </button>
+            <button id="resetBtn" class="action-btn secondary">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1 4v6h6M23 20v-6h-6"/>
+                </svg>
+                Resetar
+            </button>
+        </section>
+
+    </div>
+</main>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="todo-footer">
+    <div class="todo-container">
+        <p>&copy; 2026 TaskFlow. Todos os dados são salvos localmente no seu navegador.</p>
+    </div>
+</footer>
+
+<!-- =====================================================
+     MODAL PARA EDITAR TAREFA
+===================================================== -->
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar Tarefa</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="editTaskInput">Descrição</label>
+                <input type="text" id="editTaskInput" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="editPrioritySelect">Prioridade</label>
+                <select id="editPrioritySelect" class="form-select">
+                    <option value="baixa">Baixa Prioridade</option>
+                    <option value="media">Média Prioridade</option>
+                    <option value="alta">Alta Prioridade</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editDueDateInput">Data de Vencimento</label>
+                <input type="date" id="editDueDateInput" class="form-input">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="modalCancelBtn" class="btn-secondary">Cancelar</button>
+            <button id="modalSaveBtn" class="btn-primary">Salvar Alterações</button>
+        </div>
+    </div>
+</div>
+
+<script src="todo-app.js"></script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script></body>
+
+</html>

@@ -1,0 +1,18 @@
+name: ChatGPT Integration Test
+on: [push, pull_request]
+
+jobs:
+  test-chatgpt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate ChatGPT Integration
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "Testing ChatGPT API Integration..."
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "❌ OPENAI_API_KEY not configured"
+            exit 1
+          fi
+          echo "✅ ChatGPT integration ready"

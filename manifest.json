@@ -1,0 +1,10 @@
+{
+  "name": "MiniLine Xtreme",
+  "short_name": "MiniLine",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6f8",
+  "theme_color": "#0b0c0f",
+  "description": "Marketplace de miniaturas e colecionáveis."
+}

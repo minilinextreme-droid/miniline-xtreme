@@ -1,0 +1,8 @@
+{
+  "name":"miniline-xtreme",
+  "private":true,
+  "version":"2.0.0",
+  "scripts":{"dev":"vercel dev","build":"echo MiniLine Xtreme ready for Vercel"},
+  "dependencies":{"@supabase/supabase-js":"^2.57.0","mercadopago":"^2.9.0"},
+  "engines":{"node":">=20"}
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Troque https://SEU-SITE.com pelo endereço real do seu site -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://SEU-SITE.com/admin.html</loc></url>
+  <url><loc>https://SEU-SITE.com/cadastro.html</loc></url>
+  <url><loc>https://SEU-SITE.com/carrinho.html</loc></url>
+  <url><loc>https://SEU-SITE.com/checkout.html</loc></url>
+  <url><loc>https://SEU-SITE.com/colecao.html</loc></url>
+  <url><loc>https://SEU-SITE.com/configuracoes.html</loc></url>
+  <url><loc>https://SEU-SITE.com/conta-vendedor.html</loc></url>
+  <url><loc>https://SEU-SITE.com/conta.html</loc></url>
+  <url><loc>https://SEU-SITE.com/cupons.html</loc></url>
+  <url><loc>https://SEU-SITE.com/faq.html</loc></url>
+  <url><loc>https://SEU-SITE.com/favoritos.html</loc></url>
+  <url><loc>https://SEU-SITE.com/index.html</loc></url>
+  <url><loc>https://SEU-SITE.com/login.html</loc></url>
+  <url><loc>https://SEU-SITE.com/loja.html</loc></url>
+  <url><loc>https://SEU-SITE.com/lotes.html</loc></url>
+  <url><loc>https://SEU-SITE.com/mensagens.html</loc></url>
+  <url><loc>https://SEU-SITE.com/notificacoes.html</loc></url>
+  <url><loc>https://SEU-SITE.com/pedidos.html</loc></url>
+  <url><loc>https://SEU-SITE.com/politica.html</loc></url>
+  <url><loc>https://SEU-SITE.com/pre-vendas.html</loc></url>
+  <url><loc>https://SEU-SITE.com/produto.html</loc></url>
+  <url><loc>https://SEU-SITE.com/search.html</loc></url>
+  <url><loc>https://SEU-SITE.com/sobre.html</loc></url>
+  <url><loc>https://SEU-SITE.com/todo.html</loc></url>
+  <url><loc>https://SEU-SITE.com/vender.html</loc></url>
+</urlset>

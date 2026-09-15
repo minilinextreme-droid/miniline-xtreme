@@ -1,0 +1,36 @@
+create extension if not exists pgcrypto;
+create table if not exists profiles (id uuid primary key references auth.users(id) on delete cascade, display_name text, email text, avatar_url text, role text not null default 'customer' check(role in ('customer','seller','admin')), rating numeric(3,2) default 5, sales_count integer default 0, created_at timestamptz default now());
+create table if not exists products (id uuid primary key default gen_random_uuid(), owner_id uuid not null references profiles(id) on delete cascade, name text not null, description text default '', category text default 'Miniaturas', price numeric(12,2) not null, stock integer not null default 0, condition text, shipping text, type text not null default 'ready' check(type in ('ready','presale')), entry_price numeric(12,2), balance_price numeric(12,2), arrival date, arrival_time time, images jsonb not null default '[]'::jsonb, status text not null default 'published' check(status in ('draft','published','paused','soldout')), created_at timestamptz default now(), updated_at timestamptz default now());
+create table if not exists orders (id uuid primary key default gen_random_uuid(), user_id uuid not null references profiles(id), status text not null default 'received', total numeric(12,2) not null, total_now numeric(12,2) not null, address jsonb default '{}'::jsonb, payment_method text, created_at timestamptz default now());
+create table if not exists order_items (id uuid primary key default gen_random_uuid(), order_id uuid not null references orders(id) on delete cascade, product_id uuid not null references products(id), quantity integer not null, unit_price numeric(12,2) not null, entry_price numeric(12,2), balance_price numeric(12,2));
+create table if not exists payments (id uuid primary key default gen_random_uuid(), order_id uuid not null references orders(id) on delete cascade, provider text, preference_id text, payment_id text, status text default 'pending', amount numeric(12,2), created_at timestamptz default now(), updated_at timestamptz default now());
+create table if not exists notifications (id uuid primary key default gen_random_uuid(), user_id uuid references profiles(id) on delete cascade, title text not null, message text not null, kind text default 'system', data jsonb default '{}'::jsonb, read_at timestamptz, created_at timestamptz default now());
+create table if not exists favorites (user_id uuid references profiles(id) on delete cascade, product_id uuid references products(id) on delete cascade, created_at timestamptz default now(), primary key(user_id,product_id));
+create table if not exists reviews (id uuid primary key default gen_random_uuid(), user_id uuid references profiles(id) on delete cascade, product_id uuid references products(id) on delete cascade, seller_id uuid references profiles(id) on delete cascade, rating integer check(rating between 1 and 5), comment text, created_at timestamptz default now());
+create or replace function public.handle_new_user() returns trigger language plpgsql security definer set search_path=public as $$ begin insert into public.profiles(id,display_name,email,avatar_url) values(new.id,coalesce(new.raw_user_meta_data->>'full_name',new.raw_user_meta_data->>'name',split_part(new.email,'@',1)),new.email,new.raw_user_meta_data->>'avatar_url') on conflict(id) do update set email=excluded.email,display_name=coalesce(excluded.display_name,profiles.display_name),avatar_url=coalesce(excluded.avatar_url,profiles.avatar_url); return new; end; $$;
+drop trigger if exists on_auth_user_created on auth.users; create trigger on_auth_user_created after insert on auth.users for each row execute procedure public.handle_new_user();
+alter table profiles enable row level security; alter table products enable row level security; alter table orders enable row level security; alter table order_items enable row level security; alter table payments enable row level security; alter table notifications enable row level security; alter table favorites enable row level security; alter table reviews enable row level security;
+drop policy if exists products_public_read on products; create policy products_public_read on products for select using(status='published');
+drop policy if exists profiles_public_read on profiles; create policy profiles_public_read on profiles for select using(true);
+drop policy if exists own_orders on orders; create policy own_orders on orders for select using(auth.uid()=user_id);
+drop policy if exists own_notifications on notifications; create policy own_notifications on notifications for select using(user_id=auth.uid() or user_id is null);
+drop policy if exists own_favorites on favorites; create policy own_favorites on favorites for all using(auth.uid()=user_id) with check(auth.uid()=user_id);
+drop policy if exists reviews_public_read on reviews; create policy reviews_public_read on reviews for select using(true);
+-- Storage: crie o bucket público `product-images` no Dashboard. O servidor usa a service role para uploads.
+create table if not exists conversations (id uuid primary key default gen_random_uuid(), buyer_id uuid references profiles(id) on delete cascade, seller_id uuid references profiles(id) on delete cascade, product_id uuid references products(id) on delete set null, created_at timestamptz default now());
+create table if not exists messages (id uuid primary key default gen_random_uuid(), conversation_id uuid references conversations(id) on delete cascade, sender_id uuid references profiles(id) on delete cascade, body text not null, created_at timestamptz default now(), read_at timestamptz);
+alter table conversations enable row level security; alter table messages enable row level security;
+drop policy if exists conversations_participants on conversations; create policy conversations_participants on conversations for all using(auth.uid()=buyer_id or auth.uid()=seller_id) with check(auth.uid()=buyer_id or auth.uid()=seller_id);
+drop policy if exists messages_participants on messages; create policy messages_participants on messages for all using(exists(select 1 from conversations c where c.id=conversation_id and (c.buyer_id=auth.uid() or c.seller_id=auth.uid()))) with check(exists(select 1 from conversations c where c.id=conversation_id and (c.buyer_id=auth.uid() or c.seller_id=auth.uid())));
+
+-- Extensão do sistema de lojas/vendedores MiniLine Xtreme
+alter table profiles add column if not exists store_name text;
+alter table profiles add column if not exists store_slug text;
+alter table profiles add column if not exists store_logo text;
+alter table profiles add column if not exists store_banner text;
+alter table profiles add column if not exists store_bio text;
+alter table profiles add column if not exists seller_status text not null default 'none' check(seller_status in ('none','pending','approved','rejected'));
+alter table profiles add column if not exists seller_requested_at timestamptz;
+alter table profiles add column if not exists seller_reviewed_at timestamptz;
+alter table profiles add column if not exists seller_rejection_reason text;
+create unique index if not exists profiles_store_slug_unique on profiles(store_slug) where store_slug is not null;

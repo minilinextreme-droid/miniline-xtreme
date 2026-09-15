@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0c0f">
+    <meta name="description" content="MiniLine Xtreme — marketplace de miniaturas e colecionáveis.">
+    <title>MiniLine Xtreme | Marketplace</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=11">
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+
+
+<!-- =====================================================
+     CATEGORIAS
+===================================================== -->
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="banner">
+    <span style="position:relative; z-index:2; display:inline-flex; width:max-content; padding:7px 11px; margin-bottom:13px; border:1px solid rgba(255,210,28,.25); border-radius:30px; background:rgba(255,210,28,.08); color:#ffd21c; font-size:11px; font-weight:900; letter-spacing:.7px;">
+        MINIATURAS • COLEÇÃO • XTREME
+    </span>
+
+    <h1>Encontre sua <span style="color:#ffd21c">próxima miniatura</span>.</h1>
+
+    <p>Mainlines, Premium, raridades, temáticos e pré-vendas em um só lugar. Descubra novos minis e encontre peças para aumentar sua coleção.</p>
+
+    <div style="position:relative; z-index:2; display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;">
+        <button class="button" onclick="document.querySelector('#produtos').scrollIntoView({behavior:'smooth'})" style="width:auto; min-width:160px;">
+            Explorar produtos
+        </button>
+        <button class="button" onclick="irParaVenda()" style="width:auto; min-width:130px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:white; box-shadow:none;">
+            Vender
+        </button>
+    </div>
+</section>
+
+<!-- =====================================================
+     ATALHOS
+===================================================== -->
+
+<section style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:42px;">
+    <a href="#produtos" class="panel" style="padding:20px; transition:.2s;">
+        <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-garage" viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 10v10h14V10"/><path d="M8 20v-7h8v7"/><path d="M9.5 16h5M9.5 18h5"/></svg></div>
+        <strong>Mainlines</strong>
+        <p style="color:var(--muted); margin-top:5px; font-size:12px;">Minis para sua coleção</p>
+    </a>
+
+    <a href="index.html?tipo=presale" class="panel" style="padding:20px; transition:.2s;">
+        <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-presale" viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="M17 4v4h-4"/></svg></div>
+        <strong>Pré-vendas</strong>
+        <p style="color:var(--muted); margin-top:5px; font-size:12px;">Reserve antes de chegar</p>
+    </a>
+
+    <a href="#produtos" class="panel" style="padding:20px; transition:.2s;">
+        <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-rarity" viewBox="0 0 24 24"><path d="m12 3 2.2 5.1 5.6.5-4.2 3.7 1.3 5.5-4.9-2.9-4.9 2.9 1.3-5.5-4.2-3.7 5.6-.5z"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <strong>Raridades</strong>
+        <p style="color:var(--muted); margin-top:5px; font-size:12px;">Peças especiais</p>
+    </a>
+
+    <a href="vender.html" class="panel" style="padding:20px; transition:.2s;">
+        <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-car" viewBox="0 0 24 24"><path d="M5 15.5 6.8 9h10.4l1.8 6.5"/><path d="M4 15.5h16v3.2H4z"/><circle cx="7.5" cy="18.8" r="1.5"/><circle cx="16.5" cy="18.8" r="1.5"/><path d="M8.3 9 10 6.2h4L15.7 9"/><path d="M7.2 12.2h9.6"/></svg></div>
+        <strong>Venda seus minis</strong>
+        <p style="color:var(--muted); margin-top:5px; font-size:12px;">Anuncie seus produtos</p>
+    </a>
+</section>
+
+<!-- =====================================================
+     PRODUTOS
+===================================================== -->
+
+<section id="flashSection" class="carousel-section" style="display:none">
+    <div class="section-head" style="margin-bottom:18px">
+        <div>
+            <p class="eyebrow" style="margin-bottom:5px; color:#e53935;">PROMOÇÕES</p>
+            <h2 style="margin-bottom:0;">⚡ Ofertas do dia</h2>
+        </div>
+        <span id="flashCountdown" class="store-badge" style="background:rgba(229,57,53,.10); color:#e53935; font-size:13px;">--:--:--</span>
+    </div>
+    <div class="carousel-viewport"><div class="carousel-track" id="flashTrack"></div></div>
+</section>
+
+<section class="carousel-section" aria-label="Destaques">
+    <div class="section-head" style="margin-bottom:18px">
+        <div>
+            <p class="eyebrow" style="margin-bottom:5px">SELEÇÃO XTREME</p>
+            <h2 style="margin-bottom:0">Destaques</h2>
+        </div>
+        <div class="carousel-arrows">
+            <button type="button" class="carousel-arrow" data-carousel="-1" aria-label="Voltar">‹</button>
+            <button type="button" class="carousel-arrow" data-carousel="1" aria-label="Avançar">›</button>
+        </div>
+    </div>
+    <div class="carousel-viewport">
+        <div class="carousel-track" id="destaquesCarousel"></div>
+    </div>
+</section>
+
+<section style="margin-top:34px">
+    <div style="display:flex; align-items:flex-end; gap:15px; margin-bottom:20px;">
+        <div>
+            <p style="margin-bottom:5px; color:#a67b00; font-size:11px; font-weight:950; letter-spacing:1px;">CATEGORIAS</p>
+            <h2 style="margin-bottom:0;">Navegue por linha</h2>
+        </div>
+    </div>
+    <div id="catStrip" class="cat-strip"></div>
+</section>
+
+<section id="produtos">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:15px; margin-bottom:22px;">
+        <div>
+            <p style="margin-bottom:5px; color:#a67b00; font-size:11px; font-weight:950; letter-spacing:1px;">CATÁLOGO XTREME</p>
+            <h2 style="margin-bottom:0;">Todos os produtos</h2>
+        </div>
+        <button onclick="filtrarCategoria('Todos')" style="background:transparent; color:var(--muted); font-size:12px; font-weight:800;">Ver todos</button>
+    </div>
+
+    <div class="products" id="productGrid">
+        <!-- Produtos carregados pelo app.js -->
+    </div>
+</section>
+
+<!-- =====================================================
+     SEÇÃO PRÉ-VENDA
+===================================================== -->
+
+<section style="margin-top:55px; margin-bottom:50px;">
+    <div class="panel" style="position:relative; overflow:hidden; padding:30px; background:linear-gradient(135deg, var(--card), var(--card-2));">
+        <div style="position:absolute; width:220px; height:220px; right:-70px; top:-100px; border-radius:50%; border:1px solid rgba(255,210,28,.18);"></div>
+
+        <p style="color:#b08300; font-size:11px; font-weight:950; letter-spacing:1px;">CHEGANDO EM BREVE</p>
+        <h2 style="margin-top:7px; margin-bottom:8px;">Pré-venda</h2>
+        <p style="max-width:650px; color:var(--muted); line-height:1.6; font-size:14px;">
+            Reserve seu mini antes da chegada. Na pré-venda, você paga somente a entrada de <strong>R$ 25,00</strong> e o restante fica para quando o produto chegar.
+        </p>
+
+        <button class="button" onclick="mostrarPreVendas()" style="width:auto; margin-top:20px;">Ver pré-vendas</button>
+    </div>
+</section>
+
+<!-- =====================================================
+     POR QUE MINILINE
+===================================================== -->
+
+<section style="margin-bottom:55px;">
+    <div style="text-align:center; margin-bottom:25px;">
+        <p style="color:#a67b00; font-size:11px; font-weight:950; letter-spacing:1px;">MINI É PAIXÃO</p>
+        <h2 style="margin-top:7px;">Tudo para sua coleção</h2>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px;">
+        <div class="panel">
+            <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-buy" viewBox="0 0 24 24"><path d="M4 7h16l-1.6 11H5.6z"/><path d="M8 7a4 4 0 0 1 8 0"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/></svg></div>
+            <h3>Compre</h3>
+            <p style="color:var(--muted); margin-top:7px; font-size:13px; line-height:1.5;">Encontre miniaturas de diferentes categorias e vendedores.</p>
+        </div>
+
+        <div class="panel">
+            <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-car" viewBox="0 0 24 24"><path d="M5 15.5 6.8 9h10.4l1.8 6.5"/><path d="M4 15.5h16v3.2H4z"/><circle cx="7.5" cy="18.8" r="1.5"/><circle cx="16.5" cy="18.8" r="1.5"/><path d="M8.3 9 10 6.2h4L15.7 9"/><path d="M7.2 12.2h9.6"/></svg></div>
+            <h3>Venda</h3>
+            <p style="color:var(--muted); margin-top:7px; font-size:13px; line-height:1.5;">Crie seus anúncios e monte sua própria loja dentro da plataforma.</p>
+        </div>
+
+        <div class="panel">
+            <div class="shortcut-icon" aria-hidden="true"><svg class="mlx-icon mlx-icon-collect" viewBox="0 0 24 24"><path d="M4 8h16v11H4z"/><path d="M8 8V6h8v2M7 12h10M7 15h6"/><path d="M17 4v4M15 6h4"/></svg></div>
+            <h3>Colecione</h3>
+            <p style="color:var(--muted); margin-top:7px; font-size:13px; line-height:1.5;">Salve favoritos e acompanhe os minis que você procura.</p>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+
+
+<!-- =====================================================
+     NAVEGAÇÃO MOBILE
+===================================================== -->
+
+
+
+<script src="real-backend.js?v=11"></script><script src="app.js?v=11"></script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script></body>
+
+</html>
